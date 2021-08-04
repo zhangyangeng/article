@@ -75,6 +75,11 @@ git switch master	// 切换到现有分区
   - 每个人都在 `dev` 分支上干活且都有自己的分支，时不时地往 `dev` 分支上合并就可
   - 团队图：[这里](https://www.liaoxuefeng.com/wiki/896043488029600/900005860592480)
 
+### (0).删除远程分支
+
+- 先查看所有的分支，使用 `git branch -a` 可以看到本地和远程的所有的分支
+- 然后使用 `git push origin --delete 远程分支名` 即可删除远程分支
+
 ### (1).临时处理Bug
 
 - 可以使用 `git stash` 将当前的工作现场临时存储起来
@@ -167,6 +172,19 @@ git switch master	// 切换到现有分区
 
 - 点击[查看](https://www.liaoxuefeng.com/wiki/896043488029600/899998870925664)
 
+# Git Fork流操作
+
+1. 从远程仓库A fork到自己仓库B
+2. 从自己仓库clone到本地 
+3. git remote add upstream https://gitLab.XXXX.com/A/project（添加一个upstream指向远程仓库）
+4. git fetch upstream（获取A上的所有分支到你本地)
+5. git merge upstream/master（将远程的master分支的内容同步到本地的master上），此时你的项目与远程一致了，这是时候在本地进行修改后正常 add ，commit，push之前要确定你这次提交之前与你最后一次拉代码的时候没有人提交，这时候需要再拉一次代码
+6. git git fetch upstream （将远程分支同步到本地）
+7. git merge upstream/master （合并分支，每次将远程仓库项目同步到本地project需要6，7操作，/后可以是你想同步的任意分支）
+8. git pull（同步到本地）
+9. git push origin master(将内容推到你的仓库B)
+10. 然后请求合并到远程仓库A
+
 # Git配置问题
 
 ## 执行 git push 出错
@@ -180,9 +198,36 @@ git switch master	// 切换到现有分区
 - 错误代码：`Could not open a connection to your authentication agent`
 - 解决方法：执行 `ssh-agent bash` ，然后再执行 `ssh-add `
 
+# 如何在一台电脑上提交到不同的远程仓库中？
 
+- 本人在公司练习项目用的公司的GitLab，而自己在做一些小 demo 时是想要将其提交到自己的 GitHub 中
+- 所以进行如下操作
 
+## 1.配置私人账户的ssh
 
+- 根据配置命令，重命名为另一个 SSH key
+- 将生成的公钥配置到自己的账户下
+
+## 2.修改私人仓库的用户名和邮箱
+
+- 因为在公司电脑上配置了全局的用户名和邮箱，就会导致在上传时是以“别人”传到了自己的仓库中
+- 所以需要在自己的项目目录中配置用户名和邮箱（此时无需添加 --global）
+
+## 3.使用ssh-agent来管理私钥
+
+>当我们的主机有多个密钥对（例如：root用户生成了一对公钥私钥对，hmk用户生成了另外一对公钥私钥对），我们连接到其他不同的多台主机时，可能用的认证用户不一样，这时候需要我们手动指定使用哪个密钥，一旦机器过多输入会非常繁琐，ssh-agent能帮我们管理这些密钥对
+当我们给私钥加了密码，而我们的认证方式又选择了密钥认证，ssh-agent可以帮助我们免去输入密码的繁琐操作
+
+- 使用 `ssh-agent bash` 命令来启动
+- 给当前目录添加私人账户的公钥进行管理，使用 `ssh-add "你的 id-rsa 文件地址"` 进行添加
+
+## 4.成功连接私人账户
+
+- 此时成功连接，就可以执行相关操作了
+
+## 5.关闭进程
+
+- 因为 `ssh-agent` 是独立进程，所以即使我们退出当前 shell 连接它依然存在，所以我们最好在退出前用命令`ssh-agent k`关闭它
 
 
 
