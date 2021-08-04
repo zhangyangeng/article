@@ -146,13 +146,18 @@ git switch master	// 切换到现有分区
   - 忽略编译生成的中间文件、可执行文件等，也就是如果一个文件是通过另一个文件自动生成的，那自动生成的文件就没必要放进版本库，比如Java编译产生的`.class`文件
   - 忽略你自己的带有敏感信息的配置文件，比如存放口令的配置文件
 
+# Git配置问题
 
+## 执行 git push 出错
 
+- 错误代码：`git@github.com: Permission denied (publickey). fatal: Could not read from remote repository.`
+- 解决方法1：检查是否成功在远程仓库中添加了本机对应的 SSH Key，如果没有，添加后再次执行
+- 解决方法2：检查本地Git仓库是否和该SSH key关联，即执行 `ssh-add "你的 id-rsa 文件地址"`
 
+## 执行 ssh-add 出错
 
-
-
-
+- 错误代码：`Could not open a connection to your authentication agent`
+- 解决方法：执行 `ssh-agent bash` ，然后再执行 `ssh-add `
 
 
 
