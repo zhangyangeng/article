@@ -38,7 +38,36 @@ sass app/sass:public/stylesheets	// 使用文件夹路径作为输入输出
 - 在 sass 中变量名可以使用中划线分隔也可以使用下划线分隔，两个通用
 - <strong style="color:red;">注意：所有的全局变量我们一般定义在同一个文件，如：`_globals.scss`，然后我们使用 `@include` 来包含该文件</strong>
 
-## 5.嵌套
+## 5.语法
+
+### (1).SCSS语法
+
+- SCSS 语法使用 `.scss` 文件扩展名，格式中使用花括号来表示：
+
+```scss
+// scss样式
+$font-stack: Helvetica, sans-serif;
+$primary-color: #333;
+body{
+    font: 100% $font-stack;
+    color: $primary-color;
+}
+```
+
+### (2).SASS语法
+
+- SASS 语法即缩进语法是原始语法，使用 `.sass` 文件扩展名，格式中没有括号和分号：
+
+```scss
+// sass样式
+$font-stack: Helvetica, sans-serif
+$primary-color: #333
+body
+    font: 100% $font-stack
+    color: $primary-color
+```
+
+## 6.嵌套
 
 ### (1).嵌套规则
 
@@ -82,6 +111,20 @@ ul{
     }
 }
 ```
+
+## 7.注释
+
+### (1).单行注释
+
+- 使用 `//` 来指定，被称为 **静默注释**，因为不生成 CSS 语句
+
+### (2).多行注释
+
+- 使用 `/* */` 来指定，多行注释会被编译为 CSS 注释，所以被称为 **显示注释**
+
+### (3).文档注释
+
+- 文档注释是静默注释，用三个斜杠（`///`）直接写在文档的正上方
 
 # 二、@规则
 
@@ -219,56 +262,7 @@ ul{
 
 - 
 
-# 二、语法
-
-## 1.SCSS语法
-
-- SCSS 语法使用 `.scss` 文件扩展名，格式中使用花括号来表示：
-```scss
-// scss样式
-$font-stack: Helvetica, sans-serif;
-$primary-color: #333;
-body{
-    font: 100% $font-stack;
-    color: $primary-color;
-}
-```
-
-## 2.SASS语法
-
-- SASS 语法即缩进语法是原始语法，使用 `.sass` 文件扩展名，格式中没有括号和分号：
-```scss
-// sass样式
-$font-stack: Helvetica, sans-serif
-$primary-color: #333
-body
-    font: 100% $font-stack
-    color: $primary-color
-```
-
-## 3.解析
-
-- Sass 样式表是经由 Unicode 编码序列解析而来的。 解析是直接进行的，没有转换为标记流（token stream）的过程
-- Sass 执行解码的流程 如下：
-  - 如果字节序列以 U+FEFF 字节顺序开头，则表示是 UTF-8 或 UTF-16 编码，然后 使用对应的编码
-  - 如果字节序列以纯 ASCII 字符串 `@charset` 开头，那么 Sass 使用 CSS 规则的第 2 步来确定编码，最终 [determining the fallback encoding](https://drafts.csswg.org/css-syntax-3/#input-byte-stream)
-  - 否则，使用UTF-8
-
-## 4.注释
-
-### (1).单行注释
-
-- 使用 `//` 来指定，被称为 **静默注释**，因为不生成 CSS 语句
-
-### (2).多行注释
-
-- 使用 `/* */` 来指定，多行注释会被编译为 CSS 注释，所以被称为 **显示注释**
-
-### (3).文档注释
-
-- 文档注释是静默注释，用三个斜杠（`///`）直接写在文档的正上方
-
-## 5.函数
+## 8.其他
 
 ### (1).url()
 
@@ -276,7 +270,7 @@ body
 - 如果`url()`的参数是一个有效的未引用URL，那么Sass将按原样解析它，不过也可以使用插值注入SassScript值
 - 如果它不是一个有效的未引用URL（如果它包含变量或函数调用）它将被解析为一个原生的CSS函数调用
 
-### calc()/element()
+### (2).calc()/element()
 
 - `calc()`的数学表达式与Sass的算法冲突，而且`element()`的id可以被解析为颜色，所以它们需要特殊的解析
 ```scss
@@ -284,28 +278,6 @@ $width: 800px;
 left: calc(50% - #{$width / 2});
 ```
 
-### min()/max()
+### (3).min()/max()
 
 - 
-
-# 三、样式
-
-## 1.嵌套
-
-- 在 sass 中的样式可以嵌套使用
-```scss
-$width: 100px;
-$heigth: 200px;
-ul{
-    width: $width;
-    height: $heigth;
-    li{
-        width: $heigth;
-        height: $width;
-    }
-}
-```
-
-## 2.插值
-
-- 可以使用插值将变量和函数调用等表达式中的值注入选择器
