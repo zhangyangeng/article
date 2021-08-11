@@ -7,3 +7,4 @@ function().bind(this);
 // 等价于
 this.function()
 ```
+
