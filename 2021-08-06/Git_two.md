@@ -107,6 +107,8 @@ git branch -a
 - 为了在某分支上工作，我们需要在本地创建一个和远程分支同名的分支
 ```
 git checkout -b Android origin/Android
+// 或
+git checkout -t origin/Android		// 默认会在本地建立一个和远程分支名字一样的分支
 ```
 
 ## 4.拉取远程仓库最新内容
