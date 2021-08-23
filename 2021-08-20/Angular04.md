@@ -38,11 +38,11 @@ RouterModule.forRoot([]),
 ## 路由守卫
 
 路由守卫分为如下几种：
-- `CanActive`
-- `CanActiveChild`
-- `CanDeactive`
-- `Resolve`
-- `CanLoad`
+- `CanActivate`：处理导航到某路由的情况
+- `CanActivateChild`：处理导航到某子路由的情况
+- `CanDeactivate`：处理从当前路由离开的情况
+- `Resolve`：在路由激活之前获取路由的数据
+- `CanLoad`：处理异步导航到某特性模块的情况
 
 ### 方法
 为守卫创建服务，创建的时候可以选择守卫的类型
