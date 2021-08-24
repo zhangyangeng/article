@@ -87,3 +87,20 @@ ng g g 守卫名
 path：重定向源
 redirectTo：重定向目标，即从空路径重定向到目标路径
 pathMatch：如何匹配URL（full、prefix）
+
+
+# 表单
+
+## 响应式表单
+
+## 模板驱动表单
+
+# 报错及解决
+
+## error NG8002
+
+报错信息：`Can't bind to 'formControl' since it isn't a known property of 'input'.`
+
+报错场景：试图给 `<input>` 标签施加 formControl 这个 Directive 的时候出现
+
+解决方法：在 `app.module.ts` 中导入 `ReactiveFormsModule` 模块，并在 **NGModule** 中的 imports 字段中引入
