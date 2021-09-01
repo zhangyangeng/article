@@ -82,5 +82,78 @@ transition('* => *', [
 - 父动画可以使用 `query()` 函数来收集 HTML 模板中位于禁止动画区域内部的元素。这些元素仍然可以播放动画
 - 子动画可以被父动画查询，并且之后使用 `animateChild()` 来播放它
 
+## 复杂序列
+
+用于控制复杂序列的函数有：
+- `query()`：查找一个或多个内部 HTML 元素，其包含两个参数：
+  - css 选择器
+  - 数组，传入需要设置的样式和 `stagger()` 函数
+- `stagger()`：为多元素动画应用级联延迟，其包含两个参数：
+  - 延迟时间
+  - 数组，传入一个或多个 `animate()` 
+- `group()`：并行执行多个动画步骤，其包含一个数组参数，传入一个或多个 `animate()`
+- `sequence()`：逐个顺序执行多个动画步骤，其包含两个参数：
+  - `style()` 函数用来立即应用所指定的样式数据
+  - `animate()` 函数用来在一定的时间间隔内应用样式数据
+
+## 可复用动画
+
+可以将动画单独定义在一个文件中，然后在需要的组件中引入即可
+
+使用方法如下：
+- 在 ts 文件中导出一个用 const 定义的变量，其包含两个参数：`style()` 和 `animate()`
+```ts
+export const transAnimation = animation([
+    style({
+        height: '{{height}}',
+        opacity: '{{opacity}}',
+        backgroundColor: '{{backgroundColor}}'
+    }),
+    animate('{{time}}')
+]);
+```
+
+- 在组件设置的 `animation()` 函数的数组中使用 `useAnimation()` 函数来调用自定义动画，其包含两个参数：动画文件名和参数配置对象
+```ts
+transition('open => close', [
+  useAnimation(transAnimation, {
+    params: {
+      height: 0,
+      opacity: 1,
+      backgroundColor: 'red',
+      time: '1s'
+    }
+  })
+]),
+```
+
+# 错误
+
+## ng build 后的错误
+
+参考[这里](https://blog.csdn.net/muguli2008/article/details/105653433/)
 
 
+# 补充内容
+# 路由
+
+如果创建项目时没有使用默认配置创建路由器，可以使用如下命令进行创建，其中参数如下：
+- `--flat` 把这个文件放进了 `src/app` 中，而不是单独的目录中
+- `--module=app` 告诉 CLI 把它注册到 `AppModule` 的 `imports` 数组中
+```
+ng generate module app-routing --flat --module=app
+```
+
+然后用下面的代码替换生成的文件中的代码：
+```ts
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+```
