@@ -1,5 +1,94 @@
 # 国际化
 
+## 步骤
+
+### (1).添加 localize 包
+
+在项目根目录中使用以下命令添加 localize 包到项目中
+```
+ng add @angular/localize
+```
+
+### (2).标记要翻译的文本
+
+在需要进行翻译的标签中添加 `i18n`，如下：
+```html
+<h2 i18n>Top Heroes</h2>
+```
+
+### (3).提取源语言文件
+
+使用下面的命令将标记好的文本提取到源语言文件中
+```
+ng extract-i18n								// 在项目的根目录中生成源语言文件
+ng extract-i18n --output-path src/locale	// 修改生成地址到 src/locale
+```
+
+参数说明：
+- `--output-path`：改变生成文件的位置
+- `--format`：改变生成文件的格式（XLIFF1.2、XLIFF2、XML消息包）
+- `--outFile`：改变生成文件的文件名
+
+### (4).生成语言文件副本
+
+提取出来的源语言文件是一个叫做 `messages.xlf`，当有不同语言需求时需要为不同语言生成源语言文件副本
+
+复制并重命名为 `messages.zh.xlf`，zh 即为目标语言
+
+### (5).翻译语言文件副本
+
+交由专业的翻译人员使用 XLIFF 文件编辑器来创建和编辑翻译
+
+打开该文件，将 `<source></source>` 标签复制并粘贴在其下方，改为 `<target></target>` 标签，然后翻译标签中的文本即可
+```html
+<source>Dashboard</source>
+<target>仪表盘</target>
+```
+
+### (6).定义本地环境
+
+修改项目的 `Angular.json` 中相关配置，修改如下：
+```json
+"你的项目名": {
+  "i18n": {
+    "sourceLocale": "en-US",              // 当前本地环境语言，en表示语言，US表示国家，这里即美国英语区
+    "locales": {						  // 本地环境标识符到翻译文件的映射表
+      "zh": "src/locale/messages.zh.xlf"
+    }
+  },
+  "architect": {
+    "build": {
+      "options": {
+        "localize": true,				  // true表示为每种本地环境生成一个应用版本
+        "aot": true,					  // 本地化组件模块需要进行预先编译
+      }
+      "configurations": {
+        "zh": {
+          "localize": [
+            "zh"
+          ]
+        }
+      }
+    }
+    "serve": {
+      "configurations": {
+        "zh": {
+          "browserTarget": "你的项目名:build:zh"
+        }
+      }
+    }
+  }
+}
+```
+
+### (7).合并翻译文件
+
+从命令行中进行构建
+```
+ng build --localize
+```
+
+构建完成后会出现在 `dist/项目名` 文件下
 
 
 # 动画
