@@ -9,11 +9,20 @@
 ng add @angular/localize
 ```
 
+
 ### (2).标记要翻译的文本
 
-在需要进行翻译的标签中添加 `i18n`，如下：
+Html 文件只需要在需要进行翻译的标签中添加 `i18n`，如下：
 ```html
 <h2 i18n>Top Heroes</h2>
+```
+
+TypeScript 文件只需要在构造函数中指定以下语句即可：
+```ts
+title = 'Tour of Heroes';
+constructor(){
+  this.title = $localize `Tour of Heroes`;
+}
 ```
 
 ### (3).提取源语言文件
@@ -63,7 +72,7 @@ ng extract-i18n --output-path src/locale	// 修改生成地址到 src/locale
         "aot": true,					  // 本地化组件模块需要进行预先编译
       }
       "configurations": {
-        "zh": {
+        "zh": {							  // 使用ng serve时配置
           "localize": [
             "zh"
           ]
@@ -72,7 +81,7 @@ ng extract-i18n --output-path src/locale	// 修改生成地址到 src/locale
     }
     "serve": {
       "configurations": {
-        "zh": {
+        "zh": {							  // 使用ng serve 时配置
           "browserTarget": "你的项目名:build:zh"
         }
       }
@@ -83,12 +92,51 @@ ng extract-i18n --output-path src/locale	// 修改生成地址到 src/locale
 
 ### (7).合并翻译文件
 
-从命令行中进行构建
+构建项目时使用以下命令：
 ```
 ng build --localize
 ```
 
-构建完成后会出现在 `dist/项目名` 文件下
+直接在本地运行项目时需要将上一点中后面两个进行配置后使用以下命令：
+```
+ng serve --open --configuration=zh
+```
+
+### 引申：生成翻译文件时自动追加新内容
+
+> 直接步骤操作时，当增加新内容时都会重新生成翻译文件，之前翻译过的内容还需重新翻译并不方便，所以可以使用插件来进行追加翻译，参考自 [这里](https://www.cnblogs.com/chen8840/p/14338895.html)
+
+导入 `ngx-i18nsupport` 包：
+```
+npm install ngx-i18nsupport --save-dev
+```
+
+在项目的根目录中新增 `xliffmerge.json` 文件，并写入如下内容：
+```json
+{
+  "xliffmergeOptions": {
+    "srcDir": "src/locale",
+    "genDir": "src/locale"
+  }
+}
+```
+
+在 `package.json` 文件中添加翻译合并脚本：
+```json
+"scripts": {
+  // 生成翻译文件并存放在指定目录下
+  "extract-i18n": "ng extract-i18n --output-path src/locale",
+  // 调用配置文件将修改追加到指定语言的翻译文件中
+  "xliffmerge": "xliffmerge --profile xliffmerge.json zh"
+},
+```
+
+之后在生成翻译文件时执行下面语句即可生成且追加修改了：
+```
+npm run extract-i18n;npm run xliffmerge;
+```
+
+最后合并翻译文件即可
 
 
 # 动画
@@ -250,3 +298,7 @@ const routes: Routes = [];
 })
 export class AppRoutingModule { }
 ```
+
+# 创建项目中
+
+ng new project -S：表示不使用测试
