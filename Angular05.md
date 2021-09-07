@@ -302,3 +302,31 @@ export class AppRoutingModule { }
 # 创建项目中
 
 ng new project -S：表示不使用测试
+
+<hr/>
+
+>9.6补充内容
+
+# 服务端渲染
+
+## 基础
+
+使用 **Express** 来进行渲染
+
+## 优点
+
+通过搜索引擎优化(SEO)来帮助网络爬虫
+提升在手机和低功耗设备上的性能
+迅速显示出第一个支持首次内容绘制(FCP)的页面
+
+## 使用方法
+
+在项目根目录的命令行窗口使用如下命令创建 `app.server.module.ts`：
+```
+ng add @nguniversal/express-engine
+```
+
+渲染项目：
+```
+npm run dev:ssr
+```
