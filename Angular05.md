@@ -330,3 +330,33 @@ ng add @nguniversal/express-engine
 ```
 npm run dev:ssr
 ```
+
+-----------
+
+# 9.8补充内容
+
+## 代码内错误
+
+报错信息：类型“string | null”的参数不能赋给类型“string”的参数
+
+报错场景：当将 localstorage 获取到的值转化为JSON格式时出现
+
+报错原因：localstorage 返回的类型为 `string || null`，而 `JSON.parse()` 函数接收的是字符串类型，所以会报错
+
+解决办法：
+- 先使用判断语句判断返回值是否为空，不为空时强制将其类型设置为 string
+- 也可以在 `JSON.parse()` 函数中使用或运算符，当 localstorage 返回为 null 时就使用或运算符后面的内容
+
+## 终端错误
+
+error TS2322
+
+报错信息： Type 'Event' is not assignable to type 'string'.
+
+报错场景：当我在模板中使用 `[(ngModule)]` 时出现该错误
+
+报错原因：缺少 `FormModule` 模块
+
+解决办法：
+- 如果项目中只有一个 module，那么就在 `app.module.ts` 中引入
+- 如果项目中有其他 module，且该模板基于该 module，那么就在该 module 中进行引入
