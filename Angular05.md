@@ -360,3 +360,30 @@ error TS2322
 解决办法：
 - 如果项目中只有一个 module，那么就在 `app.module.ts` 中引入
 - 如果项目中有其他 module，且该模板基于该 module，那么就在该 module 中进行引入
+
+## 页面控制台错误
+
+报错信息：`No value accessor for form control with unspecified name attribute`
+
+报错场景：当我在模板中使用 `[(ngModule)]` 时出现该错误
+
+报错原因：双向绑定出现在了非常规的地方，比如我这里是绑定在了 `<label>` 标签上，同理 `<span>/<div>` 等都会出现
+
+解决办法：在双向绑定的标签内加入这一选项 `ngDefaultControl`，用于写入值和侦听输入元素更改
+
+# 9.16补充内容
+
+# 动画
+
+## 使用
+
+在根模块中引入 `BrowserAnimationsModule` 
+
+将动画功能导入组件文件中：
+- 直接导入：即执行下面的动画定义即可
+- 导入动画文件：
+  - 将整个触发器都定义在动画文件中
+  - 在需要的组件中引入该动画文件，并引入 `HostBinding`
+  - 使用 `@HostBinding('@detailTransition') state = 'activated';` 来绑定动画
+  - 在注入器中的 `animations` 数组中传入该动画
+- 可复用动画：见下方
