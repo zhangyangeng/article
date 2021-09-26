@@ -28,6 +28,12 @@ websocket.on("message", (msg)=> {
 })
 ```
 
+## 心跳机制
+
+参考自该 [文章](https://www.cnblogs.com/tugenhua0707/p/8648044.html)
+
+
+
 ## 参考文章
 
 [阮一峰教程](https://www.ruanyifeng.com/blog/2017/05/websocket.html)
@@ -42,7 +48,35 @@ websocket.on("message", (msg)=> {
 
 [Angular 4 + webSocket 双方通信小尝试](https://blog.csdn.net/zt15732625878/article/details/80560088)
 
+[angular 整合websocket](https://www.jianshu.com/p/b04c34df128d)
+
 # STOMP
+
+## 创建STOMP
+
+原生WebSocket使用如下：
+```ts
+const client = Stomp.client(url);
+```
+
+## 连接服务端
+
+使用 `connect()` 方法来进行连接
+
+## 心跳检测
+
+使用 `heartbeat` 来进行心跳检测
+```ts
+client.heartbeat.outgoing = 20000;	// 接收频率
+client.heartbeat.incoming = 0;		// 发送频率
+```
+
+## 发送消息
+
+使用 `send()` 方法来发送消息
+
+## 订阅、接收消息
+
 
 
 
@@ -54,5 +88,7 @@ websocket.on("message", (msg)=> {
 
 [记一次 Angular 基于 STOMP over WebSocket 实现流文本传输](https://segmentfault.com/a/1190000022799586)
 
+[StompJS使用文档总结：如何创建stomp客户端、如何连接服务器、心跳机制、如何发送消息、如何订阅和取消订阅、事务、如何调试](https://www.cnblogs.com/goloving/p/10746378.html)
 
+[WebSocket和Stomp协议](https://www.jianshu.com/p/db21502518b9)
 
