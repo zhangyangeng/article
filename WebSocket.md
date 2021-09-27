@@ -92,6 +92,10 @@ client.heartbeat.incoming = 0;		// 发送频率
 
 [WebSocket和Stomp协议](https://www.jianshu.com/p/db21502518b9)
 
+[一个stompjs的简单应用](https://github.com/chuxiaoguo/wrapper-stompjs)
+
+[stompjs的API](https://stomp-js.github.io/api-docs/latest/index.html)
+
 # 案例
 
 ## 聊天室
