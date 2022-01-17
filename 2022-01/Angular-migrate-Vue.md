@@ -79,7 +79,7 @@ Vue：
 | 对比项 | Angular | Vue |
 | :--: | :--: | :--: |
 | 语法 | @Input()/@Output() | @Prop()/@Emit() |
-| 初始值 | 子组件接收时可以设置初始值 | 子组件接收时不可设置初始值 |
+| 初始值 | 子组件接收时可以设置初始值 | 子组件接收时不可设置初始值(待验证) |
 
 装饰器仓库：[Github](https://github.com/kaorun343/vue-property-decorator)
 
@@ -129,3 +129,33 @@ private timer: Timer;
 
 `:deep(<inner-selector>)`
 
+[ant design 表格columns配置解析(text, record)](https://blog.csdn.net/weixin_41301816/article/details/121055948)
+
+# 控制台报错
+
+## 1.Extraneous non-emits event listeners (viewModeChange, modelConfigChange) were passed to component but could not be automatically inherited because component renders fragment or text root nodes.
+
+**报错信息**：`Extraneous non-emits event listeners (viewModeChange, modelConfigChange) were passed to component but could not be automatically inherited because component renders fragment or text root nodes.`
+
+**报错原因**：子组件中的结构没有放在一个根容器中
+
+**解决办法**：将子组件的结构放在一个div中即可
+```html
+<template>
+    <div>
+        ...子组件内容
+    </div>
+</template>
+```
+
+## 2.Property "options" was accessed during render but is not defined on instance
+
+**报错信息**：`Property "options" was accessed during render but is not defined on instance`
+
+**报错原因**：该组件上使用 v-model 绑定的属性没有定义初始值
+
+**解决办法**：找到该属性值，根据其类型定义一个初始值
+```ts
+// 这里是使用了 vue-class-component 插件写的语法
+public showSelectValues: Array<string> = [];
+```
