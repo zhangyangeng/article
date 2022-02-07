@@ -79,7 +79,7 @@ Vue：
 | 对比项 | Angular | Vue |
 | :--: | :--: | :--: |
 | 语法 | @Input()/@Output() | @Prop()/@Emit() |
-| 初始值 | 子组件接收时可以设置初始值 | 子组件接收时不可设置初始值(待验证) |
+| 初始值 | 子组件接收时可以通过 = 来直接赋值 | 子组件接收时不可不可直接设置初始值，需要在括号中使用 default 项来指明 |
 
 装饰器仓库：[Github](https://github.com/kaorun343/vue-property-decorator)
 
@@ -127,9 +127,71 @@ private timer: Timer;
 
 # Ant Design Vue
 
+## 1.快速给指定标签设置样式
+
 `:deep(<inner-selector>)`
 
+注意：之前的 `::v-deep` 虽然可以使用，但会在控制台警告被废弃
+
+## 2.DatePicker
+
+该组件中可以通过 `disabled-date` 来限制可选择日期的范围，其通过箭头函数来返回需要限制的条件，官方写法如下：
+```ts
+const disabledDate = (current: Dayjs) => {
+	// Can not select days before today and today
+	return current && current < dayjs().endOf('day');
+};
+```
+
+参数 `current` 指的是当前时间选择面板的日期，语句 `dayjs().endOf('day')` 指的是返回当前 dayjs 对象并设置为时间末尾
+
+整个返回语句表明今天和比时间末尾小的时间都不可以选择
+
+## 2.Table
+
 [ant design 表格columns配置解析(text, record)](https://blog.csdn.net/weixin_41301816/article/details/121055948)
+
+### 设置复选框
+
+需要给表格设置复选框时，如果从后台接收的源数据没有key值，则需要给源数据中指定 key 值用于区分选中的是哪一行
+```ts
+// this.historyList 从后台获取的源数据
+for (let i: number = 0; i < this.historyList.length; i++) {
+    this.historyList[i].key = i;
+}
+```
+
+## 3.Select
+
+关于 placeholder 的显示，Angular 和 Vue 下是不同的
+
+- 前者只需要将 value 为 `''` 即可显示 placeholder
+- 而后者需要将 value 设置为 `undefined` 才可以正常显示 placeholder
+
+VSCode插件：Ant Design Vue helper
+
+# Vue数据变更检测不到
+
+当 Vue 监测一个对象的时候，如果对象中的某一属性发生变化，Vue可能监测不到其变化，因为对象的引用地址并没有变化
+
+因此，这个时候我们就需要手动强制更新模板来重新渲染
+
+方法可参考 [这里](https://blog.csdn.net/qq449245884/article/details/104057886)
+
+# 路由
+
+## 1.携带参数跳转路由
+
+点击[这里](https://www.cnblogs.com/ysx215/p/14990691.html)
+
+## 2.query和params的区别
+
+点击[这里](https://blog.csdn.net/weixin_44867717/article/details/109773945)
+
+## 3.使用watch监听参数变化
+
+点击[这里](https://next.router.vuejs.org/zh/guide/essentials/dynamic-matching.html#%E5%93%8D%E5%BA%94%E8%B7%AF%E7%94%B1%E5%8F%82%E6%95%B0%E7%9A%84%E5%8F%98%E5%8C%96)
+
 
 # 控制台报错
 
@@ -159,3 +221,78 @@ private timer: Timer;
 // 这里是使用了 vue-class-component 插件写的语法
 public showSelectValues: Array<string> = [];
 ```
+
+# TypeScript 报错
+
+## 1.Parsing error: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+
+**报错信息**：`Parsing error: Unexpected token. Did you mean {'>'} or &gt;?`
+
+**报错原因**：在该行代码处使用了标签形式的类型声明，而 ESlint 在检测的时候误以为 HTML 标签：
+```ts
+// 这里的<number>
+this.corpusMaxNum = <number>res.paramList.filter(item => item.id === 'Titan.Model.Corpus.MaxNum')[0].value;
+```
+
+**解决办法**：使用 `as` 进行类型断言即可
+```ts
+this.corpusMaxNum = res.paramList.filter(item => item.id === 'Titan.Model.Corpus.MaxNum')[0].value as number;
+```
+
+# Vue 中使用Echarts
+
+## v-for循环图表时只显示第一个图表
+
+**错误现象**：当某个子组件专门封装了一个Echarts图表，在父组件中循环子组件时会出现只有第一个子组件可以正常渲染，剩下的子组件图表不正常显示
+
+**错误原因**：因为在循环的时候 Echarts 图表的容器id都是一样的，导致 Vue 无法判断后面几个图表怎么渲染，所以就显示异常
+
+**解决办法**：当使用 `v-for` 时，我们可以获取到index值，因此直接在id上使用 ES6 的模板字符串引入这个index值，同时在实例化 Echarts 时也这样即可正常显示
+```html
+<div class="chart" :id="`pieEcharts${index}`"></div>
+const pieEcharts = echarts.init(document.getElementById(`pieEcharts${this.index}`));
+```
+
+## 2.使用resize()方法时报错
+
+**报错信息**：`Cannot read properties of undefined (reading 'type')`
+
+**报错原因**：Vue3中使用 proxy 的方式监听响应式，Echarts 的实例会在 Vue 内部转换成响应式对象，从而在执行 `resize()` 方法时获取不到 `coordSys.type` 
+
+**解决办法**：在实例化 Echarts 时，将其指定为非响应式即可，如下：
+
+```ts
+const chartsInstance: echarts.ECharts = markRaw(echarts.init(document.getElementById('echarts')));
+```
+
+**原文链接**：源自 [@Bin_x](https://www.cnblogs.com/Bin-x/p/15342949.html)
+
+# 待整理
+
+## 1.调用子组件的方法及组件类型定义
+
+通过 `@Ref()` 注解来定义子组件
+```ts
+@Ref('audio')
+public audio: AudioPlay;
+或
+@Ref()
+public audio: InstanceType<typeof AudioPlay>;
+```
+
+然后通过 this 直接调用即可
+```ts
+this.audio.pause();
+```
+
+
+## 2.路由问题
+
+
+## 3.:deep问题
+
+虽然在样式标签中使用了 `scoped` 来限制当前的样式只应用于当前的组件
+
+但是当需要使用 `:deep` 来修改组件库样式（如 Ant Design Vue）时， 如果子组件也使用了和父组件一样的组件库时，父组件修改的样式就会覆盖到子组件上
+
+所以需要在子组件的样式前面限定一样，这个样式只作用于某一容器中的组件中
